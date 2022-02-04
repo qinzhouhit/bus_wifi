@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-'''
+"""
 used to analyze user activity
-'''
+"""
 from __future__ import division
 import collections
 import json
@@ -27,6 +27,7 @@ p_dropbox = Path(__file__).resolve().parents[3]
 sys.path.append(os.path.join(p_dropbox, 'hf_codes'))
 import sensing_tools
 
+
 # loading shenzhen device IDs, key: ID, value: [busline, platenumber]
 sz_busline_plate = json.load(open('../dev_busline_plate_dict'))
 
@@ -38,20 +39,24 @@ sz_busline_plate = json.load(open('../dev_busline_plate_dict'))
 
 devID_city_dict = json.load(open('../devID_city_dict'))
 
+
 def time_2_sec(time_str):
-    '''
+    """
     :param time_str: 2017-03-06T11:28:26.000Z
     :return: seconds of data
-    '''
+    """
+
     times = time_str.split('T')[1].split('.')[0].split(':')
     return (3600*int(times[0])+60*int(times[1])+int(times[2]))
 
+
 def user_temporal_dist(day_number):
-    '''
+    """
     show temporal distribution of users, 5 minute slot
     data source: con_discon
     :return:
-    '''
+    """
+
     data_path = "/home/hadoop/Downloads/bus_wifi/huashi/con_discon/2017-03-0"+str(day_number)+".gz/"
 
     user_total = []
@@ -106,21 +111,22 @@ def user_temporal_dist(day_number):
     #     pdf.savefig(fig)
     return time_series_percent
 
+
 def user_temporal_dist_week():
-    '''
+    """
     draw a week long temporal pattern
     :return:
-    '''
+    """
+
     time_series_percent_all = []
     for i in [6,7,1,2,3,4,5]:
         time_series_percent_all + =  user_temporal_dist(i)
 
 
-
 def user_http_analysis():
-    '''
+    """
     cdf of user request
-    '''
+    """
 
     data_path = '/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userHttp/2017-03-06.gz/'
     files = [];user_recs_http = collections.defaultdict(int)
@@ -160,11 +166,12 @@ def user_http_analysis():
 
     return user_recs_http
 
+
 def user_portal_analysis():
-    '''
+    """
     cdf of user request of portal
     :return: # of buses
-    '''
+    """
 
     data_path = '/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userPortal_V1.4/2017-03-06.gz/'
     files = [];user_recs_portal = collections.defaultdict(int)
@@ -201,8 +208,11 @@ def user_portal_analysis():
 
     return user_recs_portal
 
+
 def http_portal_one_draw(user_recs_http, user_recs_portal): #
-    '''draw http visit and portal visit in one figure'''
+    """
+    draw http visit and portal visit in one figure
+    """
     # user_one = collections.defaultdict(int)
     # for user, num in user_recs_http.items():
     #     if user in user_recs_portal:
@@ -238,11 +248,12 @@ def http_portal_one_draw(user_recs_http, user_recs_portal): #
 
 
 def user_register_type_stat():
-    '''
+    """
     showing distribution of users' device types, registration way during a day
     data source: antelop
     :return: a bar chart
-    '''
+    """
+
     data_path = '/home/hadoop/Downloads/bus_wifi/huashi/antelop/'
     files = [];user_dev = collections.defaultdict(int)
     user_reg = collections.defaultdict(int)
@@ -267,11 +278,13 @@ def user_register_type_stat():
         print ("account type:", k1)
         print ("count num:", v1)
 
+	
 def user_online_time_cdf():
-    '''
+    """
     show cdf of user total online time
     :return:
-    '''
+    """
+
     data_path = '/home/hadoop/Downloads/bus_wifi/huashi/con_discon/2017-03-06.gz/'
     files = [];session_num = collections.defaultdict(list)
     for j in os.listdir(data_path):
@@ -362,12 +375,14 @@ def user_online_time_cdf():
         plt.show()
         pdf.savefig(fig)
 
+	
 def  user_traffic_unbalance():
-    '''
+    """
     show the unbalanced data usage, every 1% users,
      we calculate total traffic for this 1% users
     :return:
-    '''
+    """
+
     data_path = "/home/hadoop/Downloads/bus_wifi/huashi/userFlow/2017-03-0"+str(6)+".gz/"
 
     files = [];user_upflow = collections.defaultdict(list);user_downflow = collections.defaultdict(list)
@@ -429,10 +444,11 @@ def  user_traffic_unbalance():
 
 
 def http_url_analysis():
-    '''
+    """
     analyze how users visit HTTP url
     :return:
-    '''
+    """
+
     data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userHttp/2017-03-0"+str(6)+".gz/"
     ct = collections.defaultdict(int)
     files = [];user_domain = collections.defaultdict(list); all_domain = []
@@ -525,11 +541,13 @@ def http_url_analysis():
         plt.show()
         pdf.savefig(fig)
 
+	
 def portal_analysis():
-    '''
+    """
     analyze how users visit portal
     :return:
-    '''
+    """
+
     data_path = "/home/hadoop/Downloads/bus_wifi/huashi/userPortal_V1.4/2017-03-0"+str(6)+".gz/"
 
     files = [];user_domain = collections.defaultdict(list); all_domain = []
@@ -611,11 +629,13 @@ def portal_analysis():
         # plt.show()
         pdf.savefig(fig)
 
+	
 def user_traffic_dist():
-    '''
+    """
     analyze user traffic distribution CDF
     :return:
-    '''
+    """
+
     data_path = "/home/hadoop/Downloads/bus_wifi/huashi/userFlow/2017-03-0"+str(6)+".gz/"
 
     files = [];user_upflow = collections.defaultdict(int);user_downflow = collections.defaultdict(int)
@@ -722,6 +742,7 @@ def user_traffic_dist():
         plt.show()
         pdf.savefig(fig)
 
+	
 def user_no_traffic_count():
     # calculate percentage of users without upload/ download data
     date = []
@@ -766,11 +787,12 @@ def user_no_traffic_count():
 
 
 def user_repetition_store():
-    '''
+    """
     TODO: calculate user repetition along two month period
     data source: con_discon
     :return: a list of repetition rate
-    '''
+    """
+
     user_id = collections.defaultdict(list)#k: date, y:
     files = [];data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/devFlow"
     try:
@@ -814,11 +836,13 @@ def user_repetition_store():
     # print "Repetition rate:"
     # print rep_rate
 
+
 def user_rep_read():
-    '''
+    """
     directly read from lists
     :return:
-    '''
+    """
+
     user_id = collections.defaultdict(list)
     with open("TwoMonth_daily_userID_dict") as f:
         temp = json.load(f) # k: day, v: list of user ID
@@ -854,8 +878,12 @@ def user_rep_read():
     print ("Repetition rate:")
     print (rep_rate)
 
+	
 def one_month_pattern_draw():
-    '''draw the pattern of two month'''
+    """
+    draw the pattern of two month
+    """
+
     date = [202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 324, 325, 326, 327, 328, 329, 330, 331]
     user_num_day = [49108, 63394, 70683, 77304, 87842, 91295, 91648, 91728, 96726, 98145, 99784, 107804, 112425, 110813, 111857, 116481, 114704, 114118, 118008, 112122, 114054, 109676, 110538, 103637, 114374, 117788, 116882, 113629, 112433, 116024, 116218, 118438, 113539, 109808, 112126, 107816, 113384, 110461, 117243, 113970, 106108, 110283, 112282, 116473, 111114, 95049, 114228, 112132, 78550, 4564, 4377, 4576, 4509, 4164, 4113, 4231, 3766]
     new_user_day = [51779, 49994, 50628, 52357, 48370, 43955, 40097, 40170, 42084, 41900, 40218, 39730, 36485, 34690, 34946, 36643, 37598, 32090, 28132, 27393, 25105, 24395, 25127, 30102, 24741, 24154, 22497, 21207, 21970, 24989, 27176, 19731, 18506, 18784, 17077, 18718, 20476, 23956, 18030, 15976, 16426, 16845, 17923, 19366, 17336, 17011, 16232, 10609, 1063, 1133, 1366, 1031, 931, 905, 903, 808]
@@ -898,10 +926,12 @@ def one_month_pattern_draw():
         plt.show()
         pdf.savefig(fig)
 
+	
 def  user_data_avail():
-    '''calculate how many days a user uses bus WiFi
+    """
+    calculate how many days a user uses bus WiFi
     user percentage to denote the time
-    '''
+    """
     # #%% ---- prepare data for ploting
     # data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userHttp/" # userPortal_V1.4
     #
@@ -1066,8 +1096,12 @@ def  user_data_avail():
     #     plt.show()
     #     pdf.savefig(fig)
 
+	
 def user_busline_similar():
-    # analyze users of the same busline, see if they have anything in common (http/portal)
+    """ 
+    analyze users of the same busline, see if they have anything in common (http/portal)
+    """
+
     date = []
     for i in range(1,10):
         date.append('0'+str(i))
@@ -1105,8 +1139,11 @@ def user_busline_similar():
         except:
             pass
 
+
 def user_internet_portal_days():
-    # cdf of users use internet/portal
+    """
+    cdf of users use internet/portal
+    """
 
     # k: # of days, v: # of users
     temp_dict = json.load(open("user_wifi_avail_days_dict"))
@@ -1158,8 +1195,11 @@ def user_internet_portal_days():
         plt.show()
         pdf.savefig(fig)
 
+	
 def user_count():
-    # all users in China
+    """
+    all users in China
+    """
     files = []; users = []
     data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userFlow/2017-03-01.gz/"
     for file in os.listdir(data_path):
@@ -1172,8 +1212,11 @@ def user_count():
 
 
 def user_count_city():
-    # TODO: active user per day in all the cities
+    """
+    TODO: active user per day in all the cities
     # print city, list of number of active devices for each day
+    """
+
     files = []
     data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/con_discon"
     for i in os.listdir(data_path):
@@ -1340,6 +1383,7 @@ def user_device_cdf():
         plt.show()
         pdf.savefig(fig)
 
+	
 def device_user_cdf():
     # TODO: number of users connect by the device
     # #%% process
@@ -1402,6 +1446,7 @@ def device_user_cdf():
         plt.show()
         pdf.savefig(fig)
 
+	
 def rep_cal(time_list):
     # TODO: calculate repetition on daily and days
     date_ct = collections.defaultdict(list)
@@ -1531,15 +1576,20 @@ def dev_repetition_cdf():
 
 
 def user_dev_busline_helper(dev_list):
-    # TODO: determine the number of bus lines connected
+    """ 
+    TODO: determine the number of bus lines connected
+    """
     tmp = list(set(dev_list))
     buslines = []
     for dev in dev_list:
         buslines.appennd(sz_busline_plate[dev][0])
     return len(tmp)/len(list(set(buslines)))
 
+
 def user_dev_busline():
-    # TODO: cdf of how user connects to buses or bus lines
+    """ 
+    TODO: cdf of how user connects to buses or bus lines
+    """
     #%% ---- prepare data for ploting
     data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/con_discon/" # userPortal_V1.4
     files = [];dev_days = collections.defaultdict(list)
@@ -1592,7 +1642,9 @@ def user_dev_busline():
 
 
 def user_connection():
-    # TODO: users connected to the WiFi repeatedly in two month
+    """
+    TODO: users connected to the WiFi repeatedly in two month
+    """
     data_path = "/home/hadoop/Downloads/bus_wifi_data/huashi_2month/con_discon/" # userPortal_V1.4
     files = []; user_times  =  collections.defaultdict(int)
     for j in os.listdir(data_path):
@@ -1617,7 +1669,9 @@ def user_connection():
 
 
 def user_url_portal_access():
-    # TODO: url and portal access ct
+    """
+    TODO: url and portal access ct
+    """
     data_path = '/home/hadoop/Downloads/bus_wifi_data/huashi_2month/userHttp/'
     files = []; user_times  =  collections.defaultdict(int)
     for j in os.listdir(data_path):
